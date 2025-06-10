@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommendations</title>
+    <style>
+        .star { cursor: pointer; color: gray; font-size: 20px; }
+        .star.selected { color: gold; }
+    </style>
+</head>
+<body>
+    <h2>Recommendations</h2>
+    {% for recommendation in recommendations %}
+        <div>
+            <h3>{{ recommendation.title }}</h3>
+            <p>{{ recommendation.description }}</p>
+
+            <div>
+                <span class="star" data-value="1">★</span>
+                <span class="star" data-value="2">★</span>
+                <span class="star" data-value="3">★</span>
+                <span class="star" data-value="4">★</span>
+                <span class="star" data-value="5">★</span>
+            </div>
+            <textarea id="comment-{{ recommendation.id }}" placeholder="Leave a comment..."></textarea>
+            <button onclick="submitFeedback({{ recommendation.id }})">Submit</button>
+
+            <p id="feedback-result-{{ recommendation.id }}"></p>
+        </div>
+        <hr>
+    {% endfor %}
+
+    <script>
+        let selectedRating = {};
+
+        document.querySelectorAll(".star").forEach(star => {
+            star.addEventListener("mouseover", function() {
+                const value = this.getAttribute("data-value");
+                highlightStars(this, value);
+            });
+
+            star.addEventListener("click", function() {
+                const value = this.getAttribute("data-value");
+                const parent = this.parentElement;
+                selectedRating[parent.dataset.id] = value;
+            });
+
+            star.addEventListener("mouseout", function() {
+                resetStars(this);
+            });
+        });
+
+        function highlightStars(star, value) {
+            const parent = star.parentElement;
+            parent.querySelectorAll(".star").forEach(s => {
+                s.classList.toggle("selected", s.getAttribute("data-value") <= value);
+            });
+        }
+
+        function resetStars(star) {
+            const parent = star.parentElement;
+            const value = selectedRating[parent.dataset.id] || 0;
+            parent.querySelectorAll(".star").forEach(s => {
+                s.classList.toggle("selected", s.getAttribute("data-value") <= value);
+            });
+        }
+
+        function submitFeedback(recommendationId) {
+            const rating = selectedRating[recommendationId] || 0;
+            const comment = document.getElementById(`comment-${recommendationId}`).value;
+
+            if (rating == 0) {
+                alert("Please select a rating.");
+                return;
+            }
+
+            fetch(`/feedback/${recommendationId}/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: `rating=${rating}&comment=${encodeURIComponent(comment)}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById(`feedback-result-${recommendationId}`).innerText =
+                        `Submitted! Rating: ${data.rating}, Comment: "${data.comment}"`;
+                } else {
+                    alert("Error submitting feedback.");
+                }
+            });
+        }
+    </script>
+</body>
+</html>

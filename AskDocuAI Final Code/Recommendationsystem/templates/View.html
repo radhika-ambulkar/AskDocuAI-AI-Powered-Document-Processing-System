@@ -1,0 +1,132 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- Site Metas -->
+  <link rel="icon" href="{% static 'images/fevicon.png' %}" type="image/gif" />
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+
+  <title>View</title>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}" />
+
+  <!-- Fonts style -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome style -->
+  <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" />
+
+  <!-- Custom styles for this template -->
+  <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+  <!-- Responsive style -->
+  <link href="{% static 'css/responsive.css' %}" rel="stylesheet" />
+
+  <style>
+  .nav-link {
+  position: relative; /* Needed for the underline */
+}
+
+.nav-link.active::after {
+  content: '';
+  display: block;
+  height: 2px; /* Thickness of the underline */
+  background: white; /* Color of the underline */
+  width: 100%; /* Full width of the link */
+  margin: 0 auto; /* Center the underline */
+  position: absolute;
+  bottom: -5px; /* Position it below the text */
+  left: 0;
+  right: 0;
+}
+
+
+	.large-space {
+    margin-left: 400px; /* Adjust the value as needed */
+}
+  </style>
+</head>
+
+<body class="sub_page">
+
+  <div class="hero_area">
+    <!-- Header section starts -->
+    <header class="header_section">
+      <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg custom_nav-container ">
+          <a class="navbar-brand" href="index.html">
+            <span>Hostit</span>
+          </a>
+
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class=""> </span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item ">
+                <a class="nav-link" href="Dashboard">Home <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item ">
+                <a class="nav-link" href="up"> Upload Document</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" href="View">View</a>
+              </li>
+            
+              <li class="nav-item">
+                <a class="nav-link" href="index">Logout</a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </header>
+    <!-- End header section -->
+  </div>
+
+  <!-- dashboard section -->
+  
+     <br/>     <br/>     <br/>     <br/>       
+	 <h2 class="large-space">View Document Related Questions</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+     
+
+    {% if questions %}
+        <div class="generated-questions">
+            <h2>Generated Questions:</h2>
+            <ol>
+                {% for question in questions %}
+                    <li>{{ question }}</li>
+                {% endfor %}
+            </ol>
+        </div>
+    {% endif %}
+	
+  </form>
+  
+
+  <!-- End dashboard section -->
+
+ 
+
+  <!-- jQuery -->
+  <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+  <!-- Bootstrap JS -->
+  <script src="{% static 'js/bootstrap.js' %}"></script>
+  <!-- Custom JS -->
+  <script src="{% static 'js/custom.js' %}"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Chatbot</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        #chatbox { width: 50%; margin: auto; border: 1px solid #ccc; padding: 10px; height: 400px; overflow-y: auto; }
+        #userInput { width: 70%; padding: 5px; }
+        #sendBtn { padding: 5px 10px; margin-left: 5px; }
+        .message { text-align: left; margin: 5px 0; }
+        .user { color: blue; font-weight: bold; }
+        .bot { color: green; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h2>Ask Your PDF</h2>
+    
+    <div id="chatbox"></div>
+    
+    <input type="text" id="userInput" placeholder="Ask something about the PDF...">
+    <button id="sendBtn">Send</button>
+
+    <script>
+        const chatbox = document.getElementById("chatbox");
+        const userInput = document.getElementById("userInput");
+        const sendBtn = document.getElementById("sendBtn");
+        const document_id = 1;  // Replace with actual document ID after upload
+
+        sendBtn.onclick = function() {
+            const query = userInput.value.trim();
+            if (query) {
+                chatbox.innerHTML += `<p class="message user">You: ${query}</p>`;
+                userInput.value = "";
+
+                fetch("/chatbot-query/", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ query: query, document_id: document_id })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    let answer = data.answer || "I couldn't find an answer.";
+                    chatbox.innerHTML += `<p class="message bot">Bot: ${answer}</p>`;
+                    chatbox.scrollTop = chatbox.scrollHeight;
+                })
+                .catch(error => {
+                    chatbox.innerHTML += `<p class="message bot">Bot: Error retrieving response.</p>`;
+                });
+            }
+        };
+
+        userInput.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                sendBtn.click();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,204 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- Site Metas -->
+  <link rel="icon" href="{% static 'images/fevicon.png' %}" type="image/gif" />
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+
+  <title>team</title>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}" />
+
+  <!-- Fonts style -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome style -->
+  <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" />
+
+  <!-- Custom styles for this template -->
+  <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+  <!-- Responsive style -->
+  <link href="{% static 'css/responsive.css' %}" rel="stylesheet" />
+  
+  
+  <style>
+  
+  
+  .nav-link {
+  position: relative; /* Needed for the underline */
+}
+
+.nav-link.active::after {
+  content: '';
+  display: block;
+  height: 2px; /* Thickness of the underline */
+  background: white; /* Color of the underline */
+  width: 100%; /* Full width of the link */
+  margin: 0 auto; /* Center the underline */
+  position: absolute;
+  bottom: -5px; /* Position it below the text */
+  left: 0;
+  right: 0;
+}
+
+
+</style>
+</head>
+
+<body class="sub_page">
+
+  <div class="hero_area">
+    <!-- Header section starts -->
+    <header class="header_section">
+      <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg custom_nav-container ">
+          <a class="navbar-brand" href="index.html">
+            <span>AskDocu-AI</span>
+          </a>
+
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class=""> </span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="index">Home <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="about"> About</a>
+              </li>
+              <li class="nav-item ">
+                <a class="nav-link active" href="team">Team</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="registration">Registration</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="login">Login</a>
+              </li>
+		  <li class="nav-item">
+        	    <a class="nav-link" href="{% url 'feedback_page' %}">Give Feedback</a>  <!-- Added Feedback Link -->
+    		  </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </header>
+    <!-- End header section -->
+  </div>
+
+  <!-- Service section -->
+  <section class="service_section layout_padding">
+    <div class="container">
+      <div class="heading_container heading_center">
+        <h2>Meet Our Team</h2>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 col-lg-4">
+          <div class="box">
+            <div class="img-box">
+              <img src="{% static 'images/j.png' %}" alt="">
+            </div>
+            <div class="detail-box">
+              <h4>Abhijeet Kale</h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <div class="box">
+            <div class="img-box">
+              <img src="{% static 'images/j.png' %}" alt="">
+            </div>
+            <div class="detail-box">
+              <h4>Radhika Ambulkar</h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <div class="box">
+            <div class="img-box">
+              <img src="{% static 'images/j.png' %}" alt="">
+            </div>
+            <div class="detail-box">
+              <h4>Aniket Kelkar</h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <div class="box">
+            <div class="img-box">
+              <img src="{% static 'images/j.png' %}" alt="">
+            </div>
+            <div class="detail-box">
+              <h4>Pranav Raut </h4>
+             </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <div class="box">
+            <div class="img-box">
+              <img src="{% static 'images/j.png' %}" alt="">
+            </div>
+            <div class="detail-box">
+              <h4>Vedant Deshpande</h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <div class="box">
+            <div class="img-box">
+              <img src="{% static 'images/j.png' %}" alt="">
+            </div>
+            <div class="detail-box">
+              <h4>Akshay Mohurle</h4>
+            </div>
+          </div>
+        </div>
+		<div class="col-md-6 col-lg-4">
+          <div class="box">
+            <div class="img-box">
+              <img src="{% static 'images/j.png' %}" alt="">
+            </div>
+            <div class="detail-box">
+              <h4>Saumya Joshi</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- End service section -->
+
+  <!-- Footer section -->
+  <footer class="footer_section">
+    <div class="container">
+      
+      </p>
+    </div>
+  </footer>
+  <!-- End footer section -->
+
+  <!-- jQuery -->
+  <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+  <!-- Bootstrap JS -->
+  <script src="{% static 'js/bootstrap.js' %}"></script>
+  <!-- Custom JS -->
+  <script src="{% static 'js/custom.js' %}"></script>
+
+</body>
+
+</html>

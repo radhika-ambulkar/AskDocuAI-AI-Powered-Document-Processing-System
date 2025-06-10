@@ -1,0 +1,233 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <title>Upload PDF to Generate Questions</title>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" />
+  <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+  <link href="{% static 'css/responsive.css' %}" rel="stylesheet" />
+
+  <style>
+    body {
+      background-image: url("{% static 'images/' %}");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .drop-area {
+      border: 2px dashed #ccc;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .button {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+
+    .button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+
+<body class="sub_page">
+
+  <div class="hero_area">
+    <!-- Header section starts -->
+    <header class="header_section">
+      <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg custom_nav-container ">
+          <a class="navbar-brand" href="index.html">
+            <span>AskDocu-AI</span>
+          </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class=""> </span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item ">
+                <a class="nav-link" href="Dashboard">Home <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item ">
+                <a class="nav-link active" href="up"> Upload Document</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="index">Logout</a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </header>
+    <!-- End header section -->
+  </div>
+
+  <!-- upload pdf section -->
+  <h1>Upload PDF to Generate Questions</h1>
+  <p>Steps to Upload:</p>
+  <ol>
+    <li>Drag and drop your PDF file into the designated area or click to select a file.</li>
+    <li>After uploading, the file size will be displayed.</li>
+    <li>Questions and answers will be generated based on the content of the PDF.</li>
+  </ol>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="drop-area" id="drop-area">
+      <p>Drag and drop your file here or click to upload.</p>
+      <input type="file" name="pdf_file" accept=".pdf" required style="display: none;" id="fileElem">
+      <label for="fileElem" class="button">Select File</label>
+    </div>
+    <button type="submit" class="button">Submit</button>
+  </form>
+
+  {% if file_size_str %}
+  <p>Uploaded File Size: {{ file_size_str }}</p>
+  {% endif %}
+
+  <h2>Generated Questions and Answers:</h2>
+  <div>
+    {% for qa in questions_with_answers %}
+    <p><strong>Question:</strong> {{ qa.question }}</p>
+    <p><strong>Answer:</strong> {{ qa.answer }}</p>
+    <hr>
+    {% endfor %}
+  </div>
+
+  {% if question_to_display %}
+  <h3>Answer for Question:</h3>
+  <p>{{ question_to_display }}</p>
+  {% endif %}
+
+  <!-- Button to open the chatbot modal -->
+  <button class="button" data-toggle="modal" data-target="#chatbotModal">Open Chatbot</button>
+
+  <!-- Chatbot Modal -->
+  <div class="modal fade" id="chatbotModal" tabindex="-1" role="dialog" aria-labelledby="chatbotModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="chatbotModalLabel">Chat with AI Chatbot</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id="chatbox" style="height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px;">
+            <!-- Chat messages will be displayed here -->
+          </div>
+          <input type="text" id="userInput" placeholder="Type your message..." style="width: 100%; padding: 5px;">
+          <button id="sendBtn" class="button">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="progress-container">
+      <div id="progress-bar" style="width: 0%; background-color: green; height: 20px;"></div>
+  </div>
+
+  <script>
+    document.querySelector("form").addEventListener("submit", function() {
+        checkProgress();  // Start checking progress after submitting the form
+    });
+
+    function checkProgress() {
+        fetch('/progress/')
+        .then(response => response.json())
+        .then(data => {
+            let progressBar = document.getElementById("progress-bar");
+            progressBar.style.width = data.progress + "%";
+            progressBar.innerText = data.progress + "%";
+
+            if (data.progress < 100) {
+                setTimeout(checkProgress, 1000); // Check every second
+            }
+        });
+    }
+  </script>
+
+
+  <script>
+    // JavaScript for sending messages to the chatbot
+    const chatbox = document.getElementById("chatbox");
+    const userInput = document.getElementById("userInput");
+    const sendBtn = document.getElementById("sendBtn");
+
+sendBtn.onclick = function() {
+    const query = userInput.value.trim();
+    if (query) {
+        chatbox.innerHTML += `<p><strong>You:</strong> ${query}</p>`;
+        userInput.value = "";
+
+        // Log the document ID
+        const documentId = '{{ extracted_text_id }}';  // Ensure this is set correctly in the template
+        console.log("Document ID:", documentId);  // Log the document ID
+
+        // Send the query to the backend API
+        fetch('/chatbot-query/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'  // Include CSRF token for security
+            },
+            body: JSON.stringify({ 
+                query: query,
+                document_id: documentId  // Pass the document ID
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.answer) {
+                chatbox.innerHTML += `<p><strong>Bot:</strong> ${data.answer}</p>`;
+            } else if (data.error) {
+                chatbox.innerHTML += `<p><strong>Bot:</strong> ${data.error}</p>`;
+            }
+            chatbox.scrollTop = chatbox.scrollHeight; // Scroll to the bottom
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            chatbox.innerHTML += `<p><strong>Bot:</strong> Sorry, I couldn't process your request.</p>`;
+        });
+    }
+};
+
+    userInput.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            sendBtn.click();
+        }
+    });
+</script>
+
+  <!-- jQuery -->
+  <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+  <!-- Bootstrap JS -->
+  <script src="{% static 'js/bootstrap.js' %}"></script>
+  <!-- Custom JS -->
+  <script src="{% static 'js/custom.js' %}"></script>
+
+</body>
+
+</html>
